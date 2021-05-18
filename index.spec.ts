@@ -1,4 +1,3 @@
-
 test('Testing time!', () => {
-    console.log('welcome');
-})
+  console.log('welcome');
+});

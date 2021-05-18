@@ -6,7 +6,10 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "start": "tsc && node ./dist/index.js"
+    "start": "npm run format && npm run lint && tsc && node ./dist/index.js",
+    "format": "prettier --write \"**/*.+(js|json|ts)\"",
+    "lint": "eslint .",
+    "format:validate": "npm run format && npm run lint"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +17,12 @@
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^15.3.0",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "faker": "^5.5.3",
     "jest": "^26.6.3",
+    "prettier": "^2.3.0",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
