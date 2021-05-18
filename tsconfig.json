@@ -6,10 +6,10 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "./src",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/*.spec.ts"]
 }

@@ -2,9 +2,10 @@
   "name": "testing-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/src/index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --collect-coverage",
     "test:watch": "jest --watchAll",
     "start": "npm run format && npm run lint && tsc && node ./dist/index.js",
     "format": "prettier --write \"**/*.+(js|json|ts)\"",
