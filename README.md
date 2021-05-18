@@ -14,6 +14,6 @@ This challenge was created to help you practicing with some testing exercises.
 
 #### Notes:
 - All the exported functions need to be tested
-- You need to get at least 80% of coverage
+- Try to get at least 80% of test coverage
 - Feel free to install additional libraries if needed. Eg. jest-in-case
-- The function `getStarWarsPlanets` needs to work even without internet conexion
+- The function `getStarWarsPlanets` should work even without internet connection
