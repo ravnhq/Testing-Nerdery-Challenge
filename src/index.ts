@@ -4,7 +4,7 @@ import users from './utils/users';
 import { createProductSchema } from './utils/product.schema';
 
 interface Product {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   price: number;
