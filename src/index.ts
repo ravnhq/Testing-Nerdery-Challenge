@@ -1,13 +1,21 @@
 import faker from 'faker';
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import users from './utils/users';
 import { createProductSchema } from './utils/product.schema';
 
-function isInteger(value) {
-  return /^[0-9]{1,}$/.test(value);
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  tags: string[];
+}
+function isInteger(value: number | string) {
+  return Number.isInteger(value);
 }
 
-function toLowerCase(str) {
+function toLowerCase(str: string) {
+  if (!str) return 'Please provide a string';
   return str
     .toLowerCase()
     .replace(/\s+/g, '-')
@@ -15,19 +23,19 @@ function toLowerCase(str) {
     .replace(/-{2,}/g, '-');
 }
 
-function removeDuplicatesFromArray(arrayOfNumbers) {
+function removeDuplicatesFromArray(arrayOfNumbers: (string|number)[]) {
   if (!Array.isArray(arrayOfNumbers)) {
     throw new Error('please provide an array of numbers or strings');
   }
   if (arrayOfNumbers.length === 1) {
     return arrayOfNumbers;
   }
-  return arrayOfNumbers.filter(function (e, pos) {
+  return arrayOfNumbers.filter((e, pos) => {
     return arrayOfNumbers.indexOf(e) === pos;
   });
 }
 
-const createProduct = (product) => {
+const createProduct = (product: Product) => {
   const isValid = createProductSchema.validate(product);
 
   if (isValid.error) {
@@ -39,7 +47,7 @@ const createProduct = (product) => {
   };
 };
 
-const createFakeProduct = () => {
+const createFakeProduct = (): Product => {
   return {
     id: faker.datatype.number(),
     name: faker.commerce.productName(),
