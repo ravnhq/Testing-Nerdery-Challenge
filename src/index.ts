@@ -17,10 +17,7 @@ function isInteger(value: number | string) {
 function toLowerCase(str: string) {
   if (!str) return 'Please provide a string';
   return str
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^-\w]/g, '')
-    .replace(/-{2,}/g, '-');
+    .toLowerCase();
 }
 
 function removeDuplicatesFromArray(arrayOfNumbers: (string|number)[]) {
