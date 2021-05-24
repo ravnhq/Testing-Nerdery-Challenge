@@ -4,7 +4,7 @@ import {
   removeDuplicatesFromArray,
   createRandomProduct,
   getStarWarsPlanets,
-  createProduct 
+  createProduct,
 } from './index';
 
 test('Testing time!', () => {
