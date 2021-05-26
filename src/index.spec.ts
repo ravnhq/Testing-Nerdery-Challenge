@@ -8,6 +8,8 @@ import {
   createProduct,
 } from './index';
 
+import faker from 'faker';
+
 // Test isInteger()
 
 describe('checking if it is integer', () => {
@@ -96,5 +98,45 @@ describe('verify a product', () => {
   });
   it('fails if we pass a product with different schema', () => {
     expect(() => createProduct(productOtherSchema)).toThrow(Error);
+  });
+});
+
+// test  createFakeProduct()
+
+describe('validate a product', () => {
+  it('return a fake product', () => {
+    expect(createFakeProduct()).toMatchInlineSnapshot(`
+      Object {
+        "description": "Asparagus with ham",
+        "id": 105,
+        "name": "Asparagus",
+        "price": 18.95,
+        "tags": Array [
+          "vegetable",
+          "green",
+        ],
+      }
+    `);
+  });
+});
+
+faker.datatype.number = jest.fn(() => 105);
+faker.commerce.productName = jest.fn(() => 'Asparagus');
+faker.commerce.productMaterial = jest.fn(() => 'vegetable');
+faker.commerce.color = jest.fn(() => 'green');
+faker.commerce.productDescription = jest.fn(() => 'Asparagus with ham');
+faker.commerce.price = jest.fn(() => 18.95);
+
+describe('get a fake product', () => {
+  const myProductfake = {
+    id: 105,
+    name: 'Asparagus',
+    tags: ['vegetable', 'green'],
+    description: 'Asparagus with ham',
+    price: 18.95,
+  };
+
+  it('return a fake product', () => {
+    expect(createFakeProduct()).toEqual(myProductfake);
   });
 });
