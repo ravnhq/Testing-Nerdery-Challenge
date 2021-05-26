@@ -30,3 +30,16 @@ describe('checking if it is integer', () => {
     expect(isInteger(Infinity)).toBe(false);
   });
 });
+
+// Test toLowerCase()
+describe('turn a string into lowercase', () => {
+  it('should return a lowercase string  if we pass capital letters', () => {
+    expect(toLowerCase('MMMM')).toMatch(/mmm/);
+  });
+  it('should return a lowercase string if we pass lowercase letters', () => {
+    expect(toLowerCase('mmm')).toMatch(/mmm/);
+  });
+  it('fails if we dont pass any string', () => {
+    expect(toLowerCase('')).toBe('Please provide a string');
+  });
+});
