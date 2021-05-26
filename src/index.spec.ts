@@ -140,3 +140,27 @@ describe('get a fake product', () => {
     expect(createFakeProduct()).toEqual(myProductfake);
   });
 });
+
+// test  createRandomProduct()
+describe('verify if the user can create a product', () => {
+  it('should return a product if the email passed belong to a creator', () => {
+    expect(createRandomProduct('clark@kent.com')).toMatchInlineSnapshot(`
+      Object {
+        "description": "Asparagus with ham",
+        "id": 105,
+        "name": "Asparagus",
+        "price": 18.95,
+        "tags": Array [
+          "vegetable",
+          "green",
+        ],
+      }
+    `);
+  });
+
+  it('fails if the email passed does not belong to a creator user', () => {
+    expect(() => createRandomProduct('diana@themyscira.com')).toThrow(
+      'You are not allowed to create products',
+    );
+  });
+});
