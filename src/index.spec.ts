@@ -68,3 +68,33 @@ describe('remove duplicates from Array', () => {
     expect(testFunction).toThrow(Error);
   });
 });
+
+// test create a product
+const productRigthSchema = {
+  name: 'Asparagus',
+  tags: ['vegetable'],
+  description: 'Asparagus with ham',
+  price: 18.95,
+};
+
+const productOtherSchema = {
+  name: 'Brown eggs',
+  tags: ['dairy', 'breakfast'],
+  description: 'Raw organic brown eggs in a basket',
+  price: 28.1,
+};
+
+describe('verify a product', () => {
+  it('return a product with id if we pass a  product with the right schema', () => {
+    expect(createProduct(productRigthSchema)).toEqual({
+      id: expect.any(Number),
+      name: 'Asparagus',
+      tags: ['vegetable'],
+      description: 'Asparagus with ham',
+      price: 18.95,
+    });
+  });
+  it('fails if we pass a product with different schema', () => {
+    expect(() => createProduct(productOtherSchema)).toThrow(Error);
+  });
+});
