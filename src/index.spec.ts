@@ -9,6 +9,12 @@ import {
 } from './index';
 
 import faker from 'faker';
+import fetch from 'node-fetch';
+import { mocked } from 'ts-jest/utils';
+
+jest.mock('node-fetch', () => {
+  return jest.fn();
+});
 
 // Test isInteger()
 
@@ -162,5 +168,58 @@ describe('verify if the user can create a product', () => {
     expect(() => createRandomProduct('diana@themyscira.com')).toThrow(
       'You are not allowed to create products',
     );
+  });
+});
+
+// test getplanets()
+
+describe('verify getplanets', () => {
+  it('get all the planet', async () => {
+    mocked(fetch).mockImplementation(
+      (): Promise<any> =>
+        Promise.resolve({
+          json: () =>
+            Promise.resolve({
+              count: 3,
+              results: [
+                {
+                  name: 'Tatooine',
+                  rotation_period: '23',
+                  orbital_period: '304',
+                },
+                {
+                  name: 'Yavin IV',
+                  rotation_period: '24',
+                  orbital_period: '4818',
+                },
+                {
+                  name: 'Hoth',
+                  rotation_period: '23',
+                  orbital_period: '549',
+                },
+              ],
+            }),
+        }),
+    );
+
+    const planets = await getStarWarsPlanets();
+
+    expect(fetch).toBeCalledWith('https://swapi.dev/api/planets');
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(planets.results[0].name).toBe('Tatooine');
+  });
+
+  it('fail if fetch is rejected', async () => {
+    try {
+      mocked(fetch).mockImplementation(
+        (): Promise<any> =>
+          Promise.resolve({
+            json: () => Promise.reject(),
+          }),
+      );
+      await getStarWarsPlanets();
+    } catch (e) {
+      expect(e).toMatchInlineSnapshot(`[Error: unable to make request]`);
+    }
   });
 });
