@@ -76,6 +76,7 @@ export {
   isInteger,
   toLowerCase,
   removeDuplicatesFromArray,
+  createFakeProduct,
   createRandomProduct,
   getStarWarsPlanets,
   createProduct,
