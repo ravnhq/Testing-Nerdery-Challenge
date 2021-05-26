@@ -43,3 +43,28 @@ describe('turn a string into lowercase', () => {
     expect(toLowerCase('')).toBe('Please provide a string');
   });
 });
+
+// Test removeDuplicatesFromArray()
+
+describe('remove duplicates from Array', () => {
+  it('return one item if we pass an array with one item', () => {
+    expect(removeDuplicatesFromArray([2])).toEqual([2]);
+  });
+
+  it('return the same array if we pass an array with unique elements', () => {
+    const myArray = ['a', 1, 'M'];
+    expect(removeDuplicatesFromArray(myArray)).toEqual(['a', 1, 'M']);
+  });
+
+  it('remove duplicates numbers or string form an array', () => {
+    const myArray = ['a', 1, 1, 'a', 3];
+    expect(removeDuplicatesFromArray(myArray)).toEqual(['a', 1, 3]);
+  });
+  it('fails if we pass a wrong argument type', () => {
+    const props = { item: 2 };
+    const testFunction = () => {
+      removeDuplicatesFromArray(props as any);
+    };
+    expect(testFunction).toThrow(Error);
+  });
+});
