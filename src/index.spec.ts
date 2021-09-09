@@ -1,3 +1,5 @@
+import { enableFetchMocks } from 'jest-fetch-mock';
+enableFetchMocks()
 import {
   isInteger,
   toLowerCase,
@@ -7,9 +9,6 @@ import {
   createProduct,
   createFakeProduct,
 } from './index';
-import { mocked } from 'ts-jest/utils';
-import fetch from 'node-fetch';
-
 test('Testing time!', () => {
   console.log('welcome');
 });
@@ -136,38 +135,17 @@ const expectedResponse = {
   results: expect.any(Array),
 };
 
-// const originalGetStarWarsPlanets = getStarWarsPlanets;
-// getStarWarsPlanets = jest.fn(()=>{
-//   throw new Error('unable to make request');
-// })
-// const mockedStarWars = jest.fn(getStarWarsPlanets);
-
-jest.mock('node-fetch');
 describe('getStarWarsPlanets function test', async () => {
   it('should return the star wars planets', async () => {
-    // mocked(fetch).mockClear()
-    // const getStarWarsPlanets = mockedStarWars;
-
-    mocked(fetch).mockImplementationOnce((): Promise<any> =>
-      Promise.resolve({
-        json: () => Promise.resolve(expectedResponse),
-      }));
-
-    // expect(fetch).toHaveBeenCalledWith('https://swapi.dev/api/planets')
+    fetchMock.dontMock();
     await expect(getStarWarsPlanets()).resolves.toMatchObject(expectedResponse);
   }, 7000);
 
   it('the fetch fails with an error', async () => {
-    // const fetchMock = jest.spyOn(window, 'fetch');
-    // fetchMock.mockImplementationOnce((): Promise<any> =>
-    //   Promise.resolve({
-    //     json: () => Promise.reject('unable to make request'),
-    //   }));
-
-    // mocked(fetch).mockImplementationOnce((): Promise<any> =>
-    //   Promise.resolve({
-    //     json: () => Promise.reject('unable to make request'),
-    //   }));
+    fetchMock.mockRejectOnce(() =>
+      getStarWarsPlanets().then(res => Promise.reject(res))
+    )
     await expect(getStarWarsPlanets()).rejects.toThrow('unable to make request');
   });
 });
+fetchMock.disableMocks();
