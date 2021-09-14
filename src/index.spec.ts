@@ -216,7 +216,9 @@ describe('getStarWarsPlanets', () => {
     const response = await getStarWarsPlanets();
 
     expect(mocked(fetch).mock.calls.length).toBe(1);
-    expect(mocked(fetch).mock.calls[0][0]).toEqual('https://swapi.dev/api/planets');
+    expect(mocked(fetch).mock.calls[0][0]).toEqual(
+      'https://swapi.dev/api/planets',
+    );
     expect(response.name).toBe('Earth');
   });
 
@@ -232,4 +234,3 @@ describe('getStarWarsPlanets', () => {
     }
   });
 });
-
