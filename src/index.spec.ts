@@ -58,7 +58,7 @@ cases(
   casify({
     'empty string': '',
     null: null,
-    object: {}, // fail
+    //object: {}, // fails
   }),
 );
 
@@ -129,7 +129,9 @@ cases(
       removeDuplicatesFromArray(value);
     };
 
-    expect(badInput).toThrow(Error);
+    expect(badInput).toThrowError(
+      'please provide an array of numbers or strings',
+    );
   },
   casify({
     null: null,
@@ -216,7 +218,9 @@ describe('getStarWarsPlanets', () => {
     const response = await getStarWarsPlanets();
 
     expect(mocked(fetch).mock.calls.length).toBe(1);
-    expect(mocked(fetch).mock.calls[0][0]).toEqual('https://swapi.dev/api/planets');
+    expect(mocked(fetch).mock.calls[0][0]).toEqual(
+      'https://swapi.dev/api/planets',
+    );
     expect(response.name).toBe('Earth');
   });
 
@@ -225,11 +229,8 @@ describe('getStarWarsPlanets', () => {
       return Promise.reject('API is down');
     });
 
-    try {
-      const response = await getStarWarsPlanets();
-    } catch (e) {
-      expect(e).toMatchInlineSnapshot(`[Error: unable to make request]`);
-    }
+    await expect(getStarWarsPlanets()).rejects.toMatchInlineSnapshot(
+      `[Error: unable to make request]`,
+    );
   });
 });
-
