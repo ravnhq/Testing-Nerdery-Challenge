@@ -8,7 +8,6 @@ import {
   createRandomProduct,
   getStarWarsPlanets,
   createProduct,
-  createFakeProduct,
 } from './index';
 test('Testing time!', () => {
   console.log('welcome');
@@ -112,11 +111,6 @@ const fakeProduct = {
   price: expect.any(String),
 };
 
-describe('createFakeProduct function test', () => {
-  it('return a fake product', () => {
-    expect(createFakeProduct()).toMatchObject(fakeProduct);
-  });
-});
 
 describe('createRandomProduct function test', () => {
   it('should return a fake product', () => {
