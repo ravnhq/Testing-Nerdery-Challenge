@@ -1,5 +1,6 @@
 import { enableFetchMocks } from 'jest-fetch-mock';
-enableFetchMocks()
+import fetchMock from 'jest-fetch-mock';
+enableFetchMocks();
 import {
   isInteger,
   toLowerCase,
@@ -15,19 +16,19 @@ test('Testing time!', () => {
 
 describe('isInteger function test', () => {
   it('should return true with positive number', () => {
-    expect(isInteger(1)).toBe(true);
+    expect(isInteger(1)).toEqual(true);
   });
   it('should return true with negative number', () => {
-    expect(isInteger(-1)).toBe(true);
+    expect(isInteger(-1)).toEqual(true);
   });
   it('should return false with string', () => {
-    expect(isInteger('1')).toBe(false);
+    expect(isInteger('1')).toEqual(false);
   });
   it('should return false with decimal', () => {
-    expect(isInteger(1.2)).toBe(false);
+    expect(isInteger(1.2)).toEqual(false);
   });
   it('should return false with NaN', () => {
-    expect(isInteger(NaN)).toBe(false);
+    expect(isInteger(NaN)).toEqual(false);
   });
 });
 
@@ -135,17 +136,46 @@ const expectedResponse = {
   results: expect.any(Array),
 };
 
-describe('getStarWarsPlanets function test', async () => {
+const mockedResponse = {
+  json: () =>
+    Promise.resolve({
+      count: 60,
+      next: 'https://swapi.dev/api/planets/?page=2',
+      previous: null,
+      results: [
+        {
+          name: 'Geonosis',
+          rotation_period: '30',
+          orbital_period: '256',
+          diameter: '11370',
+          climate: 'temperate, arid',
+          gravity: '0.9 standard',
+          terrain: 'rock, desert, mountain, barren',
+          surface_water: '5',
+        },
+      ],
+    }),
+};
+
+describe('getStarWarsPlanets function test', () => {
   it('should return the star wars planets', async () => {
-    fetchMock.dontMock();
+    fetchMock.mockImplementation(
+      (): Promise<any> => Promise.resolve(mockedResponse),
+    );
+
     await expect(getStarWarsPlanets()).resolves.toMatchObject(expectedResponse);
-  }, 7000);
+
+    expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
+  });
 
   it('the fetch fails with an error', async () => {
-    fetchMock.mockRejectOnce(() =>
-      getStarWarsPlanets().then(res => Promise.reject(res))
-    )
-    await expect(getStarWarsPlanets()).rejects.toThrow('unable to make request');
+    fetchMock.mockImplementation((): Promise<any> => Promise.reject());
+
+    await expect(getStarWarsPlanets()).rejects.toThrow(
+      'unable to make request',
+    );
+
+    expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
   });
 });
 fetchMock.disableMocks();
