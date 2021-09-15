@@ -10,17 +10,17 @@ interface Product {
   price: number;
   tags: string[];
 }
+xdescribe;
 function isInteger(value: number | string) {
   return Number.isInteger(value);
 }
 
 function toLowerCase(str: string) {
   if (!str) return 'Please provide a string';
-  return str
-    .toLowerCase();
+  return str.toLowerCase();
 }
 
-function removeDuplicatesFromArray(arrayOfNumbers: (string|number)[]) {
+function removeDuplicatesFromArray(arrayOfNumbers: (string | number)[]) {
   if (!Array.isArray(arrayOfNumbers)) {
     throw new Error('please provide an array of numbers or strings');
   }
@@ -80,4 +80,5 @@ export {
   createRandomProduct,
   getStarWarsPlanets,
   createProduct,
+  createFakeProduct,
 };
