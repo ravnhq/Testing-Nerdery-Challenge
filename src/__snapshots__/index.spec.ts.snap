@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getStarWarsPlanets it should throw an error when the API is down 1`] = `"unable to make request"`;
