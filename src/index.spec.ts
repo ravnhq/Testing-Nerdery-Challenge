@@ -16,10 +16,6 @@ describe('isInteger tests', () => {
     expect(isInteger(-10)).toBe(true);
   });
 
-  test('it should be valid with a negative number', () => {
-    expect(isInteger(-10)).toBe(true);
-  });
-
   test('it should be invalid with a decimal', () => {
     expect(isInteger(0.1)).toBe(false);
   });
