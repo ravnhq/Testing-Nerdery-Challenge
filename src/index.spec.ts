@@ -7,7 +7,18 @@ import {
   createProduct,
 } from './index';
 
-describe('isInteger tests', () => {
+import fetch from 'node-fetch';
+import { mocked } from 'ts-jest/utils';
+
+jest.mock('node-fetch', () => {
+  return jest.fn();
+});
+
+beforeEach(() => {
+  mocked(fetch).mockClear();
+});
+
+describe('isInteger', () => {
   test('it should be valid with a positive number', () => {
     expect(isInteger(10)).toBe(true);
   });
@@ -33,7 +44,7 @@ describe('isInteger tests', () => {
   });
 });
 
-describe('toLowerCase tests', () => {
+describe('toLowerCase', () => {
   test('it should return a lowercase string with string in capital letters', () => {
     expect(toLowerCase('ABC')).toBe('abc');
   });
@@ -47,8 +58,8 @@ describe('toLowerCase tests', () => {
   });
 });
 
-describe('removeDuplicatesFromArray tests', () => {
-  test('it should return the same array', () => {
+describe('removeDuplicatesFromArray', () => {
+  test('it should return the same array if there are not duplicates', () => {
     const array: string[] = ['a', 'b', 'c'];
     expect(removeDuplicatesFromArray(array)).toEqual(['a', 'b', 'c']);
   });
@@ -76,13 +87,17 @@ describe('removeDuplicatesFromArray tests', () => {
   });
 });
 
-describe('createProduct tests', () => {
-  const validProduct = {
-    name: 'laptop',
-    tags: ['technology'],
-    description: 'Asus 13 inch',
-    price: 450.0,
-  };
+describe('createProduct', () => {
+  let validProduct;
+
+  beforeAll(() => {
+    let validProduct = {
+      name: 'laptop',
+      tags: ['technology'],
+      description: 'Asus 13 inch',
+      price: 450.0,
+    };
+  });
 
   test('with a valid product it should return the same product with an id', () => {
     expect(createProduct(validProduct)).toEqual({
@@ -126,7 +141,7 @@ describe('createProduct tests', () => {
 
 describe('createRandomProduct tests', () => {
   test('it should create a product with a correct user role', () => {
-    expect(createRandomProduct('clark@kent.com')).toEqual({
+    expect(createRandomProduct('clark@kent.com')).toMatchObject({
       id: expect.any(Number),
       name: expect.any(String),
       description: expect.any(String),
@@ -146,17 +161,6 @@ describe('createRandomProduct tests', () => {
       createRandomProduct('patrick@kent.com');
     }).toThrow(new Error(`Cannot read property 'role' of undefined`));
   });
-});
-
-import fetch from 'node-fetch';
-import { mocked } from 'ts-jest/utils';
-
-jest.mock('node-fetch', () => {
-  return jest.fn();
-});
-
-beforeEach(() => {
-  mocked(fetch).mockClear();
 });
 
 describe('getStarWarsPlanets tests', () => {
