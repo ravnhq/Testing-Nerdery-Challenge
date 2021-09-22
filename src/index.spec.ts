@@ -9,55 +9,65 @@ import {
   getStarWarsPlanets,
   createProduct,
 } from './index';
-test('Testing time!', () => {
-  console.log('welcome');
-});
 
-describe('isInteger function test', () => {
+describe('isInteger', () => {
+
   it('should return true with positive number', () => {
     expect(isInteger(1)).toEqual(true);
   });
+
   it('should return true with negative number', () => {
     expect(isInteger(-1)).toEqual(true);
   });
+
   it('should return false with string', () => {
     expect(isInteger('1')).toEqual(false);
   });
+
   it('should return false with decimal', () => {
     expect(isInteger(1.2)).toEqual(false);
   });
+
   it('should return false with NaN', () => {
     expect(isInteger(NaN)).toEqual(false);
   });
 });
 
-describe('toLowerCase function test', () => {
+describe('toLowerCase', () => {
+
   it('should return the same string', () => {
     expect(toLowerCase('a')).toMatch(/a/);
   });
+
   it('should return a lowercase letter', () => {
     expect(toLowerCase('A')).toMatch(/a/);
   });
+
   it('should return a lowercase phrase', () => {
     expect(toLowerCase('This is Testing')).toMatch(/this is testing/);
   });
+
   it('should return an error message', () => {
     expect(toLowerCase(undefined)).toBe('Please provide a string');
   });
 });
 
-describe('removeDuplicatesFromArray function test', () => {
+describe('removeDuplicatesFromArray', () => {
+
   it('should return the same array if it has a length of 1', () => {
     expect(removeDuplicatesFromArray([1])).toEqual([1]);
   });
+
   it('should return the same array if there are no duplicates', () => {
     expect(removeDuplicatesFromArray([1, 2, 3, 4, 5])).toEqual([1, 2, 3, 4, 5]);
   });
+
   it('should remove the repeated element of the array', () => {
     expect(removeDuplicatesFromArray([1, 2, 3, 4, 4, 5])).toEqual([
       1, 2, 3, 4, 5,
     ]);
   });
+
   it('should remove all the repeated elements of the array', () => {
     expect(removeDuplicatesFromArray([1, '4', '4', '4', 5, 5])).toEqual([
       1,
@@ -65,6 +75,7 @@ describe('removeDuplicatesFromArray function test', () => {
       5,
     ]);
   });
+
   it('should return an error message', () => {
     expect(() => removeDuplicatesFromArray(undefined)).toThrowError(
       'please provide an array of numbers or strings',
@@ -88,7 +99,8 @@ const products = [
   },
 ];
 
-describe('createProduct function test', () => {
+describe('createProduct', () => {
+
   it('should return a product', () => {
     expect(createProduct(products[0])).toEqual({
       id: expect.any(Number),
@@ -98,6 +110,7 @@ describe('createProduct function test', () => {
       price: 28.1,
     });
   });
+
   it('should throw an error when schema is not valid', () => {
     expect(() => createProduct(products[1])).toThrow(Error);
   });
@@ -112,13 +125,15 @@ const fakeProduct = {
 };
 
 
-describe('createRandomProduct function test', () => {
+describe('createRandomProduct', () => {
+
   it('should return a fake product', () => {
     expect(createRandomProduct('clark@kent.com')).toMatchObject(fakeProduct);
   });
+
   it('should return an error message', () => {
-    expect(() => createRandomProduct('bruce@wayne.com')).toThrowError(
-      'You are not allowed to create products',
+    expect(() => createRandomProduct('bruce@wayne.com')).toThrow(
+      new Error('You are not allowed to create products'),
     );
   });
 });
@@ -151,25 +166,23 @@ const mockedResponse = {
     }),
 };
 
-describe('getStarWarsPlanets function test', () => {
+describe('getStarWarsPlanets', () => {
+
   it('should return the star wars planets', async () => {
     fetchMock.mockImplementation(
       (): Promise<any> => Promise.resolve(mockedResponse),
     );
-
     await expect(getStarWarsPlanets()).resolves.toMatchObject(expectedResponse);
-
     expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
   });
 
   it('the fetch fails with an error', async () => {
     fetchMock.mockImplementation((): Promise<any> => Promise.reject());
-
     await expect(getStarWarsPlanets()).rejects.toThrow(
       'unable to make request',
     );
-
     expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
   });
 });
+
 fetchMock.disableMocks();
