@@ -168,21 +168,18 @@ const mockedResponse = {
 
 describe('getStarWarsPlanets', () => {
 
+  fetchMock.mockResolvedValueOnce(Promise.resolve(mockedResponse) as any);
   it('should return the star wars planets', async () => {
-    fetchMock.mockImplementation(
-      (): Promise<any> => Promise.resolve(mockedResponse),
-    );
-    await expect(getStarWarsPlanets()).resolves.toMatchObject(expectedResponse);
+    const response = await getStarWarsPlanets();
+    expect(response).toMatchObject(mockedResponse.json())
     expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
   });
 
+  fetchMock.mockRejectedValueOnce(Promise.reject());
   it('the fetch fails with an error', async () => {
-    fetchMock.mockImplementation((): Promise<any> => Promise.reject());
     await expect(getStarWarsPlanets()).rejects.toThrow(
-      'unable to make request',
+      new Error('unable to make request'),
     );
     expect(fetchMock).toHaveBeenCalledWith('https://swapi.dev/api/planets');
   });
 });
-
-fetchMock.disableMocks();
