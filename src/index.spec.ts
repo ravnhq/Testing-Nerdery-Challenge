@@ -15,11 +15,15 @@ import { mocked } from 'ts-jest/utils';
 function casify(obj: unknown) {
   return Object.entries(obj).map(([key, value]) => ({
     name: `${
-      value && value.hasOwnProperty('input') ? value.input : value
+      value ?.hasOwnProperty('input') ? value.input : value
     } - ${key}`,
     value,
   }));
 }
+
+jest.mock('node-fetch', () => {
+  return jest.fn();
+});
 
 /* is Integer */
 
@@ -143,7 +147,7 @@ cases(
 /* createProduct */
 
 describe('createProduct', () => {
-  test('createProduct returns a valid Product', () => {
+  it('should return a valid Product', () => {
     const validProduct = {
       name: 'valid',
       description: 'some description',
@@ -160,7 +164,7 @@ describe('createProduct', () => {
     });
   });
 
-  test('invalid product throws an Error', () => {
+  it('should throw an Error for an invalid product', () => {
     const invalidProduct = {
       id: 12,
       name: 'invalid price in product',
@@ -178,7 +182,7 @@ describe('createProduct', () => {
 /* createRandomProduct */
 
 describe('createRandomProduct', () => {
-  test('user creator is allowed to create product', () => {
+  it('should create a product for a user creator email', () => {
     expect(createRandomProduct('clark@kent.com')).toEqual({
       id: expect.any(Number),
       name: expect.any(String),
@@ -188,7 +192,7 @@ describe('createRandomProduct', () => {
     });
   });
 
-  test('user not creator is not allowed to create product and throws Error', () => {
+  test('should throws an Error for a no-creator email', () => {
     expect(() => {
       createRandomProduct('diana@themyscira.com');
     }).toThrowError('You are not allowed to create products');
@@ -197,16 +201,12 @@ describe('createRandomProduct', () => {
 
 /* getStarWarsPlanet */
 
-jest.mock('node-fetch', () => {
-  return jest.fn();
-});
-
 beforeEach(() => {
   mocked(fetch).mockClear();
 });
 
 describe('getStarWarsPlanets', () => {
-  it('calls API and returns data planet', async () => {
+  it('should call the API and returns data planet', async () => {
     mocked(fetch).mockImplementation((): Promise<any> => {
       return Promise.resolve({
         json() {
@@ -224,7 +224,7 @@ describe('getStarWarsPlanets', () => {
     expect(response.name).toBe('Earth');
   });
 
-  it('returns an Error for a failed request', async () => {
+  it('should throw an Error for a failed request', async () => {
     mocked(fetch).mockImplementation((): Promise<any> => {
       return Promise.reject('API is down');
     });
