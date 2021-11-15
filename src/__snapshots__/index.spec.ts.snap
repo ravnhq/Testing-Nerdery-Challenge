@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createProduct should throw an exception for invalid description 1`] = `"[{\\"message\\":\\"\\\\\\"name\\\\\\" must only contain alpha-numeric characters\\",\\"path\\":[\\"name\\"],\\"type\\":\\"string.alphanum\\",\\"context\\":{\\"label\\":\\"name\\",\\"value\\":\\"the description of this products is too long, so this will be an invalid product\\",\\"key\\":\\"name\\"}}]"`;
+
+exports[`createProduct should throw an exception for invalid name 1`] = `"[{\\"message\\":\\"\\\\\\"name\\\\\\" must only contain alpha-numeric characters\\",\\"path\\":[\\"name\\"],\\"type\\":\\"string.alphanum\\",\\"context\\":{\\"label\\":\\"name\\",\\"value\\":\\"invalid product\\",\\"key\\":\\"name\\"}}]"`;
+
+exports[`createProduct should throw an exception for invalid price 1`] = `"[{\\"message\\":\\"\\\\\\"name\\\\\\" must only contain alpha-numeric characters\\",\\"path\\":[\\"name\\"],\\"type\\":\\"string.alphanum\\",\\"context\\":{\\"label\\":\\"name\\",\\"value\\":\\"the description of this products is too long, so this will be an invalid product\\",\\"key\\":\\"name\\"}}]"`;
+
+exports[`createProduct should throw an exception for invalid tags 1`] = `"[{\\"message\\":\\"\\\\\\"name\\\\\\" must only contain alpha-numeric characters\\",\\"path\\":[\\"name\\"],\\"type\\":\\"string.alphanum\\",\\"context\\":{\\"label\\":\\"name\\",\\"value\\":\\"the description of this products is too long, so this will be an invalid product\\",\\"key\\":\\"name\\"}}]"`;
