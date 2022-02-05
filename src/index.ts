@@ -16,11 +16,10 @@ function isInteger(value: number | string) {
 
 function toLowerCase(str: string) {
   if (!str) return 'Please provide a string';
-  return str
-    .toLowerCase();
+  return str.toLowerCase();
 }
 
-function removeDuplicatesFromArray(arrayOfNumbers: (string|number)[]) {
+function removeDuplicatesFromArray(arrayOfNumbers: (string | number)[]) {
   if (!Array.isArray(arrayOfNumbers)) {
     throw new Error('please provide an array of numbers or strings');
   }
