@@ -19,11 +19,13 @@
     "@types/jest": "^26.0.23",
     "@types/node": "^15.3.0",
     "@types/node-fetch": "^2.5.10",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "faker": "^5.5.3",
     "jest": "^26.6.3",
+    "msw": "^0.41.1",
     "prettier": "^2.3.0",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
@@ -31,6 +33,7 @@
   },
   "dependencies": {
     "joi": "^17.4.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "whatwg-fetch": "^3.6.2"
   }
 }
