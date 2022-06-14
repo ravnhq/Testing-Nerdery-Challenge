@@ -1,5 +1,6 @@
 import faker from 'faker';
-import fetch, { Response } from 'node-fetch';
+//import fetch, { Response } from 'node-fetch';
+import axios from 'axios';
 import users from './utils/users';
 import { createProductSchema } from './utils/product.schema';
 
@@ -64,9 +65,8 @@ const createRandomProduct = (email: string) => {
 
 const getStarWarsPlanets = async () => {
   try {
-    const response = await fetch('https://swapi.dev/api/planets');
-    const body = await response.json();
-    return body;
+    const response = await axios.get('https://swapi.dev/api/planets');
+    return response;
   } catch (e) {
     throw new Error('unable to make request');
   }

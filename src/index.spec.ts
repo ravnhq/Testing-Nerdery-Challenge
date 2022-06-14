@@ -28,22 +28,22 @@ const validProduct = {
   price: 18.95,
 };
 
-describe('Takes a number or string and returns a boolean on determining if is integer', () => {
-  test('Should return true', () => {
+describe('isInteger', () => {
+  test('Should return true if an integer is passed', () => {
     expect(isInteger(8)).toBe(true);
   });
-  test('Should return false', () => {
+  test('Should return false if a string is passed', () => {
     expect(isInteger('8')).toBe(false);
   });
-  test('Should return false', () => {
+  test('Should return false if an empty string is passed', () => {
     expect(isInteger(emptyString)).toBe(false);
   });
-  test('Should return false', () => {
+  test('Should return false if no input is passed', () => {
     expect(isInteger(noInput)).toBe(false);
   });
 });
 
-describe('Takes a string and returns it with all characters in lowercase', () => {
+describe('toLowercase', () => {
   test('Should return all characters as lowercase', () => {
     expect(toLowerCase('ABCDEFGHI')).toBe('abcdefghi');
   });
@@ -53,22 +53,22 @@ describe('Takes a string and returns it with all characters in lowercase', () =>
   test('Should return characters with lowercase applied when applicable', () => {
     expect(toLowerCase('I <3 pUnkR0ck!')).toBe('i <3 punkr0ck!');
   });
-  test('Should return a message', () => {
+  test('Should request a string if an empty string is passed', () => {
     expect(toLowerCase(emptyString)).toBe('Please provide a string');
   });
-  test('Should return an error', () => {
+  test('Should return an error if no input is passed', () => {
     expect(() => {
       toLowerCase(noInput);
     }).toThrow;
   });
-  test('Should return an error', () => {
+  test('Should return an error if a number is passed', () => {
     expect(() => {
       toLowerCase(randomNumber);
     }).toThrow;
   });
 });
 
-describe('Takes an array of numbers or strings and returns an array without duplicate occurrences', () => {
+describe('removeDupplicatesFromArray', () => {
   test('Should return an array of numbers without duplicates', () => {
     expect(removeDuplicatesFromArray([1, 1, 3, 4, 4, 6])).toEqual([1, 3, 4, 6]);
   });
@@ -80,14 +80,14 @@ describe('Takes an array of numbers or strings and returns an array without dupl
       removeDuplicatesFromArray(randomString);
     }).toThrowError('please provide an array of numbers or strings');
   });
-  test('Should return an error message', () => {
+  test('Should return an error message if an empty array is passed', () => {
     expect(() => {
       removeDuplicatesFromArray(emptyArray);
     }).toThrow;
   });
 });
 
-describe('Takes an email string and throws an error if the email is not authorized, else returns random product', () => {
+describe('createRandomProduct', () => {
   test('Should return a product object with ID', () => {
     expect(createRandomProduct('clark@kent.com')).toHaveProperty('id');
     expect(createRandomProduct('clark@kent.com')).toHaveProperty('name');
@@ -95,25 +95,25 @@ describe('Takes an email string and throws an error if the email is not authoriz
     expect(createRandomProduct('clark@kent.com')).toHaveProperty('price');
     expect(createRandomProduct('clark@kent.com')).toHaveProperty('tags');
   });
-  test('Should return an error', () => {
+  test('Should return an error if an unauthorized user email is passed', () => {
     expect(() => {
       createRandomProduct('bruce@wayne.com');
     }).toThrowError('You are not allowed to create products');
   });
-  test('Should return an error', () => {
+  test('Should return an error if an unauthorized user email is passed', () => {
     expect(() => {
       createRandomProduct('diana@themyscira.com');
     }).toThrowError('You are not allowed to create products');
   });
 });
 
-describe('Takes a product object and returns an error if object properties are not valid, else returns the product object with its ID', () => {
-  test('Should return an error', () => {
+describe('createProduct', () => {
+  test('Should return an error if invalid product object is passed', () => {
     expect(() => {
       createProduct(invalidProduct);
     }).toThrow();
   });
-  test('Should return an error', () => {
+  test('Should return an error if empty object is passed', () => {
     expect(() => {
       createProduct(emptyObject);
     }).toThrow();
@@ -136,12 +136,6 @@ const server = setupServer(
         next: 'https://swapi.dev/api/planets/?page=2',
       }),
     );
-    // return res(
-    //   ctx.status(400),
-    //   ctx.json({
-    //     errorMessage: 'unable to make request',
-    //   }),
-    // );
   }),
 );
 
@@ -154,23 +148,14 @@ describe('Makes a call to an API and returns an error if unable to make request,
     expect(await getStarWarsPlanets()).toHaveProperty('count', 60);
     expect(await getStarWarsPlanets()).toHaveProperty('next', 'https://swapi.dev/api/planets/?page=2');
   });
-  test('Should return an error message', async () => {
+  test.only('Should return an error message', async () => {
     server.use(
       rest.get('https://swapi.dev/api/planets', (req, res, ctx) => {
         return res(
           ctx.status(400),
-          ctx.json({
-            errorMessage: 'unable to make request',
-          }),
         );
       }),
     );
-    // await expect(getStarWarsPlanets()).resolves.toEqual({sfhkakhsf: 'aslfkhsaofha'})
-   //await expect(getStarWarsPlanets()).resolves.toEqual({errorMessage: 'unable to make request'})
-  try {
-      return await getStarWarsPlanets();
-    } catch (e) {
-      return expect(e).toEqual({ message: "error", status: 401 });
-    }
+  await expect(getStarWarsPlanets()).rejects.toMatch('unable to make request')
   })
 });
