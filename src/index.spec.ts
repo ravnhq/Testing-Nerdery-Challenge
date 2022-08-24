@@ -75,7 +75,7 @@ describe(`removeDuplicatesFromArray`, () => {
   });
 
   cases(
-    `returns string array without duplicates if many elements`,
+    `returns array without duplicates if many elements`,
     subcase => {
       if (typeof subcase.testValue[0] === 'string') {
         expect(removeDuplicatesFromArray(subcase.testValue)).toEqual(['a', 'b', 'c']);
