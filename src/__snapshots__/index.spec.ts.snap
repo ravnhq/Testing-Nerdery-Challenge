@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getStarWarsPlanets returns body if request success or throw error if fails 1`] = `
+exports[`getStarWarsPlanets returns body if request success or throws error if fails 1`] = `
 Object {
   "count": 60,
   "next": "https://swapi.dev/api/planets/?page=2",

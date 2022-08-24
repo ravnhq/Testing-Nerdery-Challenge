@@ -8,7 +8,7 @@ import {
   createProduct,
 } from './index';
 
-function casify(subcases) {
+function casify(subcases: {}) {
   return Object.entries(subcases).map(([testName, testValue]) => {
     return {
       name: `${testValue} - ${testName}`,
@@ -17,7 +17,7 @@ function casify(subcases) {
   });
 }
 
-function functionResultOrError(aFunction, argument) {
+function functionResultOrError(aFunction: Function, argument) {
   try {
     return aFunction(argument);
   } catch (e) {
@@ -28,7 +28,7 @@ function functionResultOrError(aFunction, argument) {
 describe(`isInteger`, () => {
   cases(
     `returns true if integer`,
-    (subcase) => expect(isInteger(subcase.testValue)).toBe(true),
+    subcase => expect(isInteger(subcase.testValue)).toBe(true),
     casify({
       postive: 3,
       negative: -3,
@@ -38,7 +38,7 @@ describe(`isInteger`, () => {
 
   cases(
     `returns false if not integer`,
-    (subcase) => expect(isInteger(subcase.testValue)).toBe(false),
+    subcase => expect(isInteger(subcase.testValue)).toBe(false),
     casify({
       string: '3',
       decimal: 3.1,
@@ -48,15 +48,13 @@ describe(`isInteger`, () => {
 
 describe(`toLowerCase`, () => {
   test(`requires non empty string`, () => {
-    const str = '';
-    const inLowerCase = toLowerCase(str);
-    expect(inLowerCase).toMatchInlineSnapshot(`"Please provide a string"`);
+    const str = ''; 
+    expect(toLowerCase(str)).toMatchInlineSnapshot(`"Please provide a string"`);
   });
 
   test(`returns lowercase if string has length`, () => {
     const str = 'A Message';
-    const inLowerCase = toLowerCase(str);
-    expect(inLowerCase).toBe('a message');
+    expect(toLowerCase(str)).toBe('a message');
   });
 });
 
@@ -68,36 +66,34 @@ describe(`removeDuplicatesFromArray`, () => {
       `[Error: please provide an array of numbers or strings]`,
     );
   });
-
+ 
   test(`returns identity if just one element`, () => {
-    const array = ['1'];
-    const removed = removeDuplicatesFromArray(array);
-    expect(removed).toEqual(array);
+    const stringArray = ['a'];
+    const numberArray = [1];
+    expect(removeDuplicatesFromArray(stringArray)).toEqual(stringArray);
+    expect(removeDuplicatesFromArray(numberArray)).toEqual(numberArray);
   });
 
   cases(
-    `returns number array without duplicates`,
-    (subcase) =>
-      expect(removeDuplicatesFromArray(subcase.testValue)).toEqual([1, 2, 3]),
+    `returns string array without duplicates if many elements`,
+    subcase => {
+      if (typeof subcase.testValue[0] === 'string') {
+        expect(removeDuplicatesFromArray(subcase.testValue)).toEqual(['a', 'b', 'c']);
+      } else if (typeof subcase.testValue[0] === 'number') {
+        expect(removeDuplicatesFromArray(subcase.testValue)).toEqual([1, 2, 3]);
+      }
+    },
     casify({
-      uniques: [1, 2, 3],
-      duplicated: [1, 1, 2, 2, 3, 3],
+      stringUniques: ['a', 'b', 'c'],
+      stringDuplicated: ['a', 'a', 'b', 'b', 'c', 'c'],
+      numberUniques: [1, 2, 3],
+      numberDuplicated: [1, 1, 2, 2, 3, 3],
     }),
-  );
-
-  cases(
-    `returns string array without duplicates`,
-    (subcase) =>
-      expect(removeDuplicatesFromArray(subcase.testValue)).toEqual(['a', 'b', 'c']),
-    casify({
-      uniques: ['a', 'b', 'c'],
-      duplicated: ['a', 'a', 'b', 'b', 'c', 'c'],
-    }),
-  );
+  );  
 });
 
 describe(`createProduct`, () => {
-  test(`throw error if not a valid schema product`, () => {
+  test(`throws error if not a valid schema product`, () => {
     const product = {};
     const error = functionResultOrError(createProduct, product);
     expect(error).toMatchInlineSnapshot(
@@ -121,7 +117,7 @@ describe(`createProduct`, () => {
 });
 
 describe(`createRandomProduct`, () => {
-  test(`throw error if user's role is not allowed`, () => {
+  test(`throws error if user's role is not allowed`, () => {
     const email = 'bruce@wayne.com';
     const error = functionResultOrError(createRandomProduct, email);
     expect(error.message).toMatchInlineSnapshot(
@@ -143,7 +139,7 @@ describe(`createRandomProduct`, () => {
 });
 
 describe(`getStarWarsPlanets`, () => {
-  test(`returns body if request success or throw error if fails`, async () => {
+  test(`returns body if request success or throws error if fails`, async () => {
     try {
       const response = await getStarWarsPlanets();
       expect(response).toMatchSnapshot();
