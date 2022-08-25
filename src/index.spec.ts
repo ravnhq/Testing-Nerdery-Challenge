@@ -1,4 +1,5 @@
 import cases from 'jest-in-case';
+import fetch, { Response } from 'node-fetch';
 import {
   isInteger,
   toLowerCase,
@@ -7,6 +8,15 @@ import {
   getStarWarsPlanets,
   createProduct,
 } from './index';
+
+jest.mock('node-fetch', () => {
+  const module = jest.requireActual('node-fetch');
+  return {
+    __esModule: true,
+    ...module,
+    default: jest.fn(module.default),
+  };
+});
 
 function casify(subcases: {}) {
   return Object.entries(subcases).map(([testName, testValue]) => {
@@ -28,7 +38,7 @@ function functionResultOrError(aFunction: Function, argument) {
 describe(`isInteger`, () => {
   cases(
     `returns true if integer`,
-    subcase => expect(isInteger(subcase.testValue)).toBe(true),
+    (subcase) => expect(isInteger(subcase.testValue)).toBe(true),
     casify({
       postive: 3,
       negative: -3,
@@ -38,7 +48,7 @@ describe(`isInteger`, () => {
 
   cases(
     `returns false if not integer`,
-    subcase => expect(isInteger(subcase.testValue)).toBe(false),
+    (subcase) => expect(isInteger(subcase.testValue)).toBe(false),
     casify({
       string: '3',
       decimal: 3.1,
@@ -48,7 +58,7 @@ describe(`isInteger`, () => {
 
 describe(`toLowerCase`, () => {
   test(`requires non empty string`, () => {
-    const str = ''; 
+    const str = '';
     expect(toLowerCase(str)).toMatchInlineSnapshot(`"Please provide a string"`);
   });
 
@@ -66,7 +76,7 @@ describe(`removeDuplicatesFromArray`, () => {
       `[Error: please provide an array of numbers or strings]`,
     );
   });
- 
+
   test(`returns identity if just one element`, () => {
     const stringArray = ['a'];
     const numberArray = [1];
@@ -76,9 +86,13 @@ describe(`removeDuplicatesFromArray`, () => {
 
   cases(
     `returns array without duplicates if many elements`,
-    subcase => {
+    (subcase) => {
       if (typeof subcase.testValue[0] === 'string') {
-        expect(removeDuplicatesFromArray(subcase.testValue)).toEqual(['a', 'b', 'c']);
+        expect(removeDuplicatesFromArray(subcase.testValue)).toEqual([
+          'a',
+          'b',
+          'c',
+        ]);
       } else if (typeof subcase.testValue[0] === 'number') {
         expect(removeDuplicatesFromArray(subcase.testValue)).toEqual([1, 2, 3]);
       }
@@ -89,7 +103,7 @@ describe(`removeDuplicatesFromArray`, () => {
       numberUniques: [1, 2, 3],
       numberDuplicated: [1, 1, 2, 2, 3, 3],
     }),
-  );  
+  );
 });
 
 describe(`createProduct`, () => {
@@ -138,13 +152,52 @@ describe(`createRandomProduct`, () => {
   });
 });
 
-describe(`getStarWarsPlanets`, () => {
-  test(`returns body if request success or throws error if fails`, async () => {
+describe(`getStarWarsPlanets`, () => {  
+  test(`original is managed correctly`, async () => {
     try {
       const response = await getStarWarsPlanets();
       expect(response).toMatchSnapshot();
     } catch (e) {
       expect(e).toMatchInlineSnapshot(`[Error: unable to make request]`);
     }
+  }, 10000);
+
+  describe(`mocked`, () => {
+    const mockFetch = fetch as jest.MockedFunction<any>; //cast because of ts (static types)
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test(`returns result if success response`, async () => {
+      const body = JSON.stringify({
+        count: 60,
+        next: 'https://swapi.dev/api/planets/?page=2&format=api',
+        previous: null,
+        results: [],
+      });
+      const response = new Response(body, {status: 200});
+      mockFetch.mockResolvedValueOnce(response);
+
+      const result = await getStarWarsPlanets();
+      expect(result).toMatchSnapshot();
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledWith('https://swapi.dev/api/planets');
+    });
+
+    test(`returns error if failure response`, async () => {
+      const response = new Promise((_, reject) => {
+        reject(new Error(`unable to make request`));
+      });
+      mockFetch.mockImplementationOnce(() => response);
+
+      try {
+        await getStarWarsPlanets();
+      } catch (e) {
+        expect(e.message).toMatchInlineSnapshot(`"unable to make request"`);
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+        expect(mockFetch).toHaveBeenCalledWith('https://swapi.dev/api/planets');
+      }
+    });
   });
 });
