@@ -9,7 +9,8 @@
     "rootDir": "./src",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strictNullChecks": true
   },
   "exclude": ["node_modules", "src/*.spec.ts"]
 }
