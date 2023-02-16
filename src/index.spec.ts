@@ -1,11 +1,22 @@
 import {
   createProduct,
+  createRandomProduct,
+  getStarWarsPlanets,
   isInteger,
   removeDuplicatesFromArray,
   toLowerCase,
 } from './index';
 import { faker } from '@faker-js/faker';
 import { createTestProduct } from './test/util';
+import users from './utils/users';
+import fetch from 'node-fetch';
+
+const { Response } = jest.requireActual('node-fetch');
+jest.mock('node-fetch');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
 describe('Integer validation', () => {
   const integerValues = [[1], [-1], [12451], [34566]];
@@ -120,4 +131,66 @@ describe('create product', () => {
       expect(() => createProduct(product)).toThrow();
     },
   );
+});
+
+describe('create random product', () => {
+  test('fails if no user exists with the provided email', () => {
+    const email = 'unperson@users.com';
+    expect(() => createRandomProduct(email)).toThrowErrorMatchingInlineSnapshot(
+      `"You are not allowed to create products"`,
+    );
+  });
+
+  test("fails if user doesn't have the creator role", () => {
+    const email = users.find((it) => it.role !== 'creator')!!.email;
+    expect(() => createRandomProduct(email)).toThrowErrorMatchingInlineSnapshot(
+      `"You are not allowed to create products"`,
+    );
+  });
+
+  test('returns a new product when user is a creator', () => {
+    const email = users.find((it) => it.role === 'creator')!!.email;
+    const product = createRandomProduct(email);
+
+    expect(product.id).toBeDefined();
+    expect(product.name).toBeDefined();
+    expect(product.description).toBeDefined();
+    expect(product.tags).toBeDefined();
+    expect(product.price).toBeDefined();
+  });
+});
+
+describe('getting Star Wars planets', () => {
+  const mockedFetch = fetch as jest.MockedFunction<typeof fetch>;
+
+  test('works when response successfully returns a JSON', async () => {
+    const jsonBody = {};
+    const body = JSON.stringify(jsonBody);
+    const response = new Response(body, { status: 200 });
+    mockedFetch.mockResolvedValueOnce(response);
+
+    const receivedJson = await getStarWarsPlanets();
+
+    expect(receivedJson).toEqual(jsonBody);
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
+    expect(mockedFetch).toHaveBeenCalledWith('https://swapi.dev/api/planets');
+  });
+
+  test('throws an error when response fails for HTTP error', async () => {
+    const response = new Response('', { status: 400 });
+    mockedFetch.mockResolvedValueOnce(response);
+
+    await expect(() => getStarWarsPlanets()).rejects.toMatchInlineSnapshot(
+      `[Error: unable to make request]`,
+    );
+  });
+
+  test('throws an error if received contents are not valid JSON', async () => {
+    const response = new Response('hello', { status: 200 });
+    mockedFetch.mockResolvedValueOnce(response);
+
+    await expect(() => getStarWarsPlanets()).rejects.toMatchInlineSnapshot(
+      `[Error: unable to make request]`,
+    );
+  });
 });
