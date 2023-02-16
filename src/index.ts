@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import fetch from 'node-fetch';
 import users from './utils/users';
 import { createProductSchema } from './utils/product.schema';
@@ -49,8 +49,8 @@ const createFakeProduct = (): Product => {
     id: faker.datatype.number(),
     name: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
-    price: faker.commerce.price(),
-    tags: [faker.commerce.productMaterial(), faker.commerce.color()],
+    price: parseInt(faker.commerce.price()),
+    tags: [faker.commerce.productMaterial(), faker.color.human()],
   };
 };
 
@@ -79,4 +79,5 @@ export {
   createRandomProduct,
   getStarWarsPlanets,
   createProduct,
+  Product,
 };
