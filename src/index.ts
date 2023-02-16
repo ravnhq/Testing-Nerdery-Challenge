@@ -21,12 +21,10 @@ function toLowerCase(str: string): string {
 }
 
 function removeDuplicatesFromArray(arrayOfNumbers: (string | number)[]) {
-  if (!Array.isArray(arrayOfNumbers)) {
-    throw new Error('please provide an array of numbers or strings');
-  }
-  if (arrayOfNumbers.length === 1) {
+  if (arrayOfNumbers.length < 1) {
     return arrayOfNumbers;
   }
+
   return arrayOfNumbers.filter((e, pos) => {
     return arrayOfNumbers.indexOf(e) === pos;
   });
