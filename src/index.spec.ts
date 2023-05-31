@@ -4,9 +4,8 @@ import {
   removeDuplicatesFromArray,
   createRandomProduct,
   getStarWarsPlanets,
-  createProduct 
+  createProduct,
 } from './index';
-
 import cases from 'jest-in-case';
 import fetch from 'node-fetch';
 import { createProductSchema } from './utils/product.schema';
@@ -55,12 +54,8 @@ describe('removeDuplicatesFromArrayTest', () => {
   test('removeDuplicatesFromArrayTest function with a non array parameter should throw an error', () => {
     const parameter: any = 'something';
 
-    const result: () => unknown = () => {
-      removeDuplicatesFromArray(parameter);
-    };
-
-    expect(result).toThrowError(
-        'please provide an array of numbers or strings',
+    expect(() => removeDuplicatesFromArray(parameter)).toThrowError(
+      Error('please provide an array of numbers or strings'),
     );
   });
   test('removeDuplicatesFromArrayTest function with an array of a unique element as parameter should return the same array', () => {
@@ -97,24 +92,26 @@ describe('createRandomProductTest', () => {
       createRandomProduct(email);
     };
 
-    expect(result).toThrowError('You are not allowed to create products');
+    expect(result).toThrowError(
+      Error('You are not allowed to create products'),
+    );
   });
   cases(
-      'createRandomProduct function should return a fake product with its properties',
-      (options) => {
-        const email: string = 'clark@kent.com';
+    'createRandomProduct function should return a fake product with its properties',
+    (options) => {
+      const email: string = 'clark@kent.com';
 
-        const result = createRandomProduct(email);
+      const result = createRandomProduct(email);
 
-        expect(result).toHaveProperty(options.property);
-      },
-      {
-        'product has id property': { property: 'id' },
-        'product has name property': { property: 'name' },
-        'product has description property': { property: 'description' },
-        'product has price property': { property: 'price' },
-        'product has tags property': { property: 'tags' },
-      },
+      expect(result).toHaveProperty(options.property);
+    },
+    {
+      'product has id property': { property: 'id' },
+      'product has name property': { property: 'name' },
+      'product has description property': { property: 'description' },
+      'product has price property': { property: 'price' },
+      'product has tags property': { property: 'tags' },
+    },
   );
 });
 
@@ -123,10 +120,10 @@ describe('getStarWarsPlanetsTest', () => {
     const data = { planets: ['Tatooine', 'Alderaan', 'Naboo'] };
     const mockedFetch = fetch as jest.MockedFunction<typeof fetch>;
     mockedFetch.mockImplementation(
-        (): Promise<any> =>
-            Promise.resolve({
-              json: () => Promise.resolve(data),
-            }),
+      (): Promise<any> =>
+        Promise.resolve({
+          json: () => Promise.resolve(data),
+        }),
     );
 
     const result = await getStarWarsPlanets();
@@ -163,8 +160,9 @@ describe('createProductTest', () => {
 
     const result = createProduct(product);
 
-    expect(result).toMatchObject(product);
-    expect(result).toHaveProperty('id');
+    expect(result).toMatchObject({
+      ...product,
+      id: expect.any(Number),
+    });
   });
 });
-
