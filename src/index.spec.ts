@@ -18,21 +18,21 @@ test('Testing time!', () => {
 
 describe('isInteger', () => {
   it('should be an integer', () => {
-    expect(isInteger(2)).toBe(true);
+    expect(isInteger(2)).toEqual(true);
   });
 
   it('should be a string', () => {
-    expect(isInteger('hello')).toBe(false);
+    expect(isInteger('hello')).toEqual(false);
   });
 });
 
 describe('toLowerCase', () => {
   it('should fail if it is an empty word', () => {
-    expect(toLowerCase('')).toBe('Please provide a string');
+    expect(toLowerCase('')).toEqual('Please provide a string');
   });
 
   it('should return a lower case word', () => {
-    expect(toLowerCase('HELLO')).toBe('hello');
+    expect(toLowerCase('HELLO')).toEqual('hello');
   });
 });
 
@@ -45,14 +45,14 @@ describe('removeDuplicatesFromArray', () => {
 
   it('should return array unmodified if there is a single element', () => {
     const shortArray = ['hello'];
-    expect(removeDuplicatesFromArray(shortArray)).toBe(shortArray);
+    expect(removeDuplicatesFromArray(shortArray)).toEqual(shortArray);
   });
 
   it('should remove duplicates', () => {
     const longArray = ['hello', 'bye', 'hello', 'good', 'hello'];
     const result = removeDuplicatesFromArray(longArray);
 
-    expect(result.length).toBe(3);
+    expect(result.length).toEqual(3);
     expect(result).toEqual(['hello', 'bye', 'good']);
   });
 });
@@ -66,7 +66,9 @@ describe('createProduct', () => {
         price: 12,
         tags: ['food'],
       }),
-    ).toThrow(Error);
+    ).toThrow(
+      '[{"message":"\\"name\\" length must be at least 3 characters long","path":["name"],"type":"string.min","context":{"limit":3,"value":"p","label":"name","key":"name"}}]',
+    );
   });
 
   it('should create a new product', () => {
@@ -79,39 +81,59 @@ describe('createProduct', () => {
 
     const result = createProduct(product);
 
-    expect(result).toHaveProperty('id');
-    expect(typeof result).toBe('object');
+    expect(result).toMatchObject(product);
+    expect(typeof result).toEqual('object');
   });
 });
 
 describe('createRandomProduct', () => {
   it('should fail if permissions are wrong', () => {
-    expect(() => createRandomProduct('bruce@wayne.com')).toThrow(Error);
+    const email = 'bruce@wayne.com';
+
+    expect(() => createRandomProduct(email)).toThrow(
+      'You are not allowed to create products',
+    );
   });
 
-  it('should create a fake product', () => {
-    expect(createRandomProduct('clark@kent.com')).toHaveProperty('id');
-    expect(createRandomProduct('clark@kent.com')).toBeDefined();
+  it('createRandomProduct should return a valid product object', () => {
+    // Arrange
+    const email = 'clark@kent.com';
+
+    const fakeProduct = {
+      id: expect.any(Number),
+      name: expect.any(String),
+      description: expect.any(String),
+      price: expect.any(String),
+      tags: [expect.any(String), expect.any(String)],
+    };
+
+    // Act
+    const result = createRandomProduct(email);
+
+    // Assert
+    expect(result).toMatchObject(fakeProduct);
   });
 });
 
 describe('getStarWarsPlanets', () => {
   it('should throw an error if the API request fails', async () => {
     (fetch as jest.MockedFunction<typeof fetch>).mockRejectedValueOnce(
-      new Response(JSON.stringify({})),
+      new Error(JSON.stringify({})),
     );
 
-    await expect(getStarWarsPlanets()).rejects.toThrow(Error);
+    await expect(getStarWarsPlanets()).rejects.toThrow(
+      'unable to make request',
+    );
   });
 
   it('should response with the correct data', async () => {
-    (fetch as jest.MockedFunction<typeof fetch>).mockReturnValueOnce(
+    (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue(
       new Response(JSON.stringify({ id: 1 })),
     );
 
     const result = await getStarWarsPlanets();
 
-    expect(typeof result).toBe('object');
-    expect(result).toHaveProperty('id');
+    expect(typeof result).toEqual('object');
+    expect(result).toMatchObject({ ...result, id: expect.any(Number) });
   });
 });
