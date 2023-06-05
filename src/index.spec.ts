@@ -8,11 +8,12 @@ import {
   createProduct,
   Product,
 } from './index';
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import { createProductSchema } from './utils/product.schema';
 import cases from 'jest-in-case';
 import { mocked } from 'ts-jest/utils';
 import users from './utils/users';
+import { number } from 'joi';
 jest.mock('node-fetch');
 
 function casify(obj) {
@@ -23,6 +24,7 @@ function casify(obj) {
     };
   });
 }
+
 describe('isIntenger', () => {
   cases(
     'should return true when pass a number by argument',
@@ -39,6 +41,7 @@ describe('isIntenger', () => {
       'argument -10': { actual: -10 },
     },
   );
+
   cases(
     'should return false when pass a string by argument',
     (opts) => {
@@ -56,6 +59,7 @@ describe('isIntenger', () => {
     },
   );
 });
+
 describe('toLowerCase', () => {
   cases(
     `should return argument in lowercase`,
@@ -182,6 +186,7 @@ describe('getStartWatsPlanets', () => {
 
     await expect(actual).rejects.toThrow(expectedError);
   });
+
   test('should return correct json from api call', async () => {
     const expected = {
       count: 60,
@@ -189,12 +194,12 @@ describe('getStartWatsPlanets', () => {
       previous: null,
       results: expect.any(Array),
     };
-    mocked(fetch).mockImplementation((): Promise<any> => {
+    mocked(fetch).mockImplementation((): Promise<Response> => {
       return Promise.resolve({
         json() {
           return Promise.resolve(expected);
         },
-      });
+      }) as unknown as Promise<Response>;
     });
 
     const actual = await getStarWarsPlanets();
