@@ -30,7 +30,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "joi": "^17.4.0",
+    "joi": "^18.2.1",
     "node-fetch": "^2.6.1"
   }
 }
